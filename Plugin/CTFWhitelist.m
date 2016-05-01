@@ -101,7 +101,7 @@ static NSDictionary* whitelistItemForSite( NSString* site )
 
 - (void) _alertDone
 {
-	[ _activeAlert release ];
+	//[ _activeAlert release ];
 	_activeAlert = nil;
 }
 
@@ -164,7 +164,7 @@ static NSDictionary* whitelistItemForSite( NSString* site )
 
 - (NSMutableSet *) _mutableSiteInfo
 {
-    NSMutableArray *hostWhitelistArray = [[[[CTFUserDefaultsController standardUserDefaults] arrayForKey: sHostSiteInfoDefaultsKey] mutableCopy] autorelease];
+    NSMutableArray *hostWhitelistArray = [[[CTFUserDefaultsController standardUserDefaults] arrayForKey: sHostSiteInfoDefaultsKey] mutableCopy];
 	
 	NSMutableSet *hostWhitelist;
     if (hostWhitelistArray == nil) {

@@ -21,7 +21,7 @@ static CTFUserDefaultsController *sharedInstance = nil;
 + (id)allocWithZone:(NSZone *)zone;
 {
 	if (sharedInstance) {
-		return [sharedInstance retain];
+		return sharedInstance;
 	} else {
 		return [super allocWithZone:zone];
 	}
@@ -40,8 +40,9 @@ static CTFUserDefaultsController *sharedInstance = nil;
 
 - (id)initWithCoder:(NSCoder *)decoder;
 {
+    self = [super initWithCoder:decoder];
 	if (! sharedInstance) {
-		if ((self = [super init])) {
+		if (self) {
 			hasInited = YES;
 		}
 	}
@@ -51,8 +52,8 @@ static CTFUserDefaultsController *sharedInstance = nil;
 
 - (void)dealloc;
 {
-	[userDefaultsDict release];
-	[super dealloc];
+	//[userDefaultsDict release];
+	//[super dealloc];
 }
 
 - (void)setUpExternalPrefsDictionary;
@@ -95,7 +96,7 @@ static CTFUserDefaultsController *sharedInstance = nil;
 	if (! userDefaultsDict) userDefaultsDict = [[CTFPreferencesDictionary alloc] init]; 
 	[userDefaultsDict removeAllObjects];
 	[userDefaultsDict addEntriesFromDictionary:newDictCopy];
-	[newDictCopy release];
+	//[newDictCopy release];
 }
 
 - (void)pluginDefaultsDidChange:(NSNotification *)notification;

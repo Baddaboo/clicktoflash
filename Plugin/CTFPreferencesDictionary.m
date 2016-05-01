@@ -19,13 +19,13 @@ static CTFPreferencesDictionary *sharedInstance = nil;
 
 + (id)dictionaryWithDictionary:(NSDictionary *)otherDictionary;
 {
-	return [[[CTFPreferencesDictionary alloc] initWithDictionary:otherDictionary] autorelease];
+	return [[CTFPreferencesDictionary alloc] initWithDictionary:otherDictionary];
 }
 
 + (id)allocWithZone:(NSZone *)zone;
 {
 	if (sharedInstance) {
-		return [sharedInstance retain];
+		return sharedInstance;
 	} else {
 		return [super allocWithZone:zone];
 	}
@@ -47,7 +47,7 @@ static CTFPreferencesDictionary *sharedInstance = nil;
 {
 	if (! sharedInstance) {
 		if ((self = [super init])) {
-			realMutableDictionary = [[NSMutableDictionary dictionaryWithDictionary:otherDictionary] retain];
+			realMutableDictionary = [NSMutableDictionary dictionaryWithDictionary:otherDictionary];
 			hasInited = YES;
 		}
 	} else {
@@ -59,8 +59,8 @@ static CTFPreferencesDictionary *sharedInstance = nil;
 
 - (void)dealloc;
 {
-	[realMutableDictionary release];
-	[super dealloc];
+	//[realMutableDictionary release];
+	//[super dealloc];
 }
 
 - (void)setObject:(id)object forKey:(id)key;

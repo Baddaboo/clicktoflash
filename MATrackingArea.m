@@ -87,7 +87,7 @@ static NSMutableArray *_trackingAreas; // 2-dimensional
             continue;
         }
 
-        NSPoint mouseInWindow = [window convertScreenToBase:mouseLoc];
+        NSPoint mouseInWindow = [window convertRectFromScreen:CGRectMake(mouseLoc.x, mouseLoc.y, 0, 0)].origin;
         NSPoint mouseInView = [view convertPoint:mouseInWindow fromView:nil];
         NSEnumerator *trackingAreaEnumerator = [[_trackingAreas objectAtIndex:index] objectEnumerator];
         MATrackingArea *area;
@@ -166,7 +166,7 @@ static NSMutableArray *_trackingAreas; // 2-dimensional
                                                     context:nil
                                                 eventNumber:0
                                              trackingNumber:0
-                                                   userData:[area userInfo]];
+                                                   userData:(__bridge void * _Nullable)([area userInfo])];
                     break;
                 case NSMouseMoved:
                     event = [NSEvent mouseEventWithType:eventType
@@ -178,6 +178,8 @@ static NSMutableArray *_trackingAreas; // 2-dimensional
                                             eventNumber:0
                                              clickCount:0
                                                pressure:0.0];
+                    break;
+                default:
                     break;
             }
 
@@ -192,6 +194,8 @@ static NSMutableArray *_trackingAreas; // 2-dimensional
                     break;
                 case NSMouseMoved:
                     [owner mouseMoved:event];
+                    break;
+                default:
                     break;
             }
         }
@@ -243,11 +247,11 @@ static NSMutableArray *_trackingAreas; // 2-dimensional
 
     // Create Polling Timer Of Extreme Evil if appropriate.
     if (!_pollingTimer) {
-        _pollingTimer = [[NSTimer scheduledTimerWithTimeInterval:MA_POLLING_INTERVAL
+        _pollingTimer = [NSTimer scheduledTimerWithTimeInterval:MA_POLLING_INTERVAL
                                                           target:[self class]
                                                         selector:@selector(checkMouseLocation:)
                                                         userInfo:nil
-                                                         repeats:YES] retain];
+                                                         repeats:YES];
     }
 }
 
@@ -282,7 +286,7 @@ static NSMutableArray *_trackingAreas; // 2-dimensional
     // Destroy timer if appropriate.
     if ([_views count] == 0) {
         [_pollingTimer invalidate];
-        [_pollingTimer release];
+        //[_pollingTimer release];
         _pollingTimer = nil;
     }
 }
@@ -312,7 +316,7 @@ static NSMutableArray *_trackingAreas; // 2-dimensional
         _rect = rect;
         _options = options;
         _owner = owner;
-        _userInfo = [userInfo retain];
+        _userInfo = userInfo;
         _lastMovedPoint = NSZeroPoint;
         _inside = NO;
     }
@@ -322,8 +326,8 @@ static NSMutableArray *_trackingAreas; // 2-dimensional
 
 - (void)dealloc
 {
-    [_userInfo release];
-    [super dealloc];
+    //[_userInfo release];
+    //[super dealloc];
 }
 
 
@@ -354,7 +358,7 @@ static NSMutableArray *_trackingAreas; // 2-dimensional
 
 - (NSDictionary *)userInfo
 {
-    return [[_userInfo retain] autorelease];
+    return _userInfo;
 }
 
 

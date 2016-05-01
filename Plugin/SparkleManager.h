@@ -25,6 +25,8 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "SparkleManager.h"
+#import <Sparkle/Sparkle.h>
 
 @class SUUpdater;
 

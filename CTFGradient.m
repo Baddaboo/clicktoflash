@@ -12,7 +12,7 @@
 
 @interface CTFGradient (Private)
 - (void)_commonInit;
-- (void)setBlendingMode:(CTGradientBlendingMode)mode;
+- (void)setBlendingMode_s:(CTGradientBlendingMode)mode;
 - (void)addElement:(CTGradientElement*)newElement;
 
 - (CTGradientElement *)elementAtIndex:(unsigned)index;
@@ -39,7 +39,7 @@ static void resolveHSV(float *color1, float *color2);
   if (self != nil)
 	{
 	[self _commonInit];
-	[self setBlendingMode:CTLinearBlendingMode];
+	[self setBlendingMode_s:CTLinearBlendingMode];
 	}
   return self;
   }
@@ -61,7 +61,7 @@ static void resolveHSV(float *color1, float *color2);
 	free(elementToRemove);
 	}
   
-  [super dealloc];
+  //[super dealloc];
   }
 
 - (id)copyWithZone:(NSZone *)zone
@@ -76,7 +76,7 @@ static void resolveHSV(float *color1, float *color2);
 	currentElement = currentElement->nextElement;
 	}
   
-  [copy setBlendingMode:blendingMode];
+  [copy setBlendingMode_s:blendingMode];
   
   return copy;
   }
@@ -109,7 +109,7 @@ static void resolveHSV(float *color1, float *color2);
   {
   [self _commonInit];
   
-  [self setBlendingMode:[coder decodeIntForKey:@"CTGradientBlendingMode"]];
+  [self setBlendingMode_s:[coder decodeIntForKey:@"CTGradientBlendingMode"]];
   unsigned count = [coder decodeIntForKey:@"CTGradientElementCount"];
   
   while(count != 0)
@@ -154,7 +154,7 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color1];
   [newInstance addElement:&color2];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)aquaSelectedGradient
@@ -194,7 +194,7 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color3];
   [newInstance addElement:&color4];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)aquaNormalGradient
@@ -226,7 +226,7 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color3];
   [newInstance addElement:&color4];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)aquaPressedGradient
@@ -258,7 +258,7 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color3];
   [newInstance addElement:&color4];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)unifiedSelectedGradient
@@ -278,7 +278,7 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color1];
   [newInstance addElement:&color2];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)unifiedNormalGradient
@@ -298,7 +298,7 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color1];
   [newInstance addElement:&color2];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)unifiedPressedGradient
@@ -318,7 +318,7 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color1];
   [newInstance addElement:&color2];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)unifiedDarkGradient
@@ -338,7 +338,7 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color1];
   [newInstance addElement:&color2];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)sourceListSelectedGradient
@@ -362,7 +362,7 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color1];
   [newInstance addElement:&color2];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)sourceListUnselectedGradient
@@ -386,7 +386,7 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color1];
   [newInstance addElement:&color2];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)rainbowGradient
@@ -410,9 +410,9 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color1];
   [newInstance addElement:&color2];
   
-  [newInstance setBlendingMode:CTChromaticBlendingMode];
+  [newInstance setBlendingMode_s:CTChromaticBlendingMode];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)hydrogenSpectrumGradient
@@ -485,9 +485,9 @@ static void resolveHSV(float *color1, float *color2);
 	[newInstance addElement:&fadeOut];
 	}
   
-  [newInstance setBlendingMode:CTChromaticBlendingMode];
+  [newInstance setBlendingMode_s:CTChromaticBlendingMode];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 #pragma mark -
@@ -511,16 +511,16 @@ static void resolveHSV(float *color1, float *color2);
 	curElement = curElement->nextElement;
 	}
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 - (CTFGradient *)gradientWithBlendingMode:(CTGradientBlendingMode)mode
   {
   CTFGradient *newGradient = [self copy];  
   
-  [newGradient setBlendingMode:mode];
+  [newGradient setBlendingMode_s:mode];
   
-  return [newGradient autorelease];
+  return newGradient;
   }
 
 
@@ -541,7 +541,7 @@ static void resolveHSV(float *color1, float *color2);
   //Pass it off to addElement to take care of adding it to the elementList
   [newGradient addElement:&newGradientElement];
   
-  return [newGradient autorelease];
+  return newGradient;
   }
 
 
@@ -554,7 +554,7 @@ static void resolveHSV(float *color1, float *color2);
   if(isnan(removedElement.position))
 	[NSException raise:NSRangeException format:@"-[%@ removeColorStopAtPosition:]: no such colorStop at position (%f)", [self class], position];
   
-  return [newGradient autorelease];
+  return newGradient;
   }
 
 - (CTFGradient *)removeColorStopAtIndex:(unsigned)index
@@ -565,7 +565,7 @@ static void resolveHSV(float *color1, float *color2);
   if(isnan(removedElement.position))
 	[NSException raise:NSRangeException format:@"-[%@ removeColorStopAtIndex:]: index (%i) beyond bounds", [self class], index];
   
-  return [newGradient autorelease];
+  return newGradient;
   }
 #pragma mark -
 
@@ -648,9 +648,9 @@ static void resolveHSV(float *color1, float *color2);
   	float deltax,
   		  deltay;
 	
-  	float rangle = angle * pi/180;	//convert the angle to radians
+  	float rangle = angle * M_PI/180;	//convert the angle to radians
 	
-  	if(fabsf(tan(rangle))<=1)	//for range [-45,45], [135,225]
+  	if(fabs(tan(rangle))<=1)	//for range [-45,45], [135,225]
 		{
 		x = NSWidth(rect);
 		y = NSHeight(rect);
@@ -669,9 +669,9 @@ static void resolveHSV(float *color1, float *color2);
 		x = NSHeight(rect);
 		y = NSWidth(rect);
 		
-		sina = sin(rangle - 90*pi/180);
-		cosa = cos(rangle - 90*pi/180);
-		tana = tan(rangle - 90*pi/180);
+		sina = sin(rangle - 90*M_PI/180);
+		cosa = cos(rangle - 90*M_PI/180);
+		tana = tan(rangle - 90*M_PI/180);
 		
 		length = x/fabsf(cosa)+(y-x*fabsf(tana))*fabsf(sina);
 		
@@ -761,7 +761,7 @@ static void resolveHSV(float *color1, float *color2);
 	[path addClip];
 	[self fillRect:[path bounds] angle:0];
 	[path transformUsingAffineTransform:transform];
-	[transform release];
+	//[transform release];
   [currentContext restoreGraphicsState];
   }
 - (void)radialFillBezierPath:(NSBezierPath *)path
@@ -777,7 +777,7 @@ static void resolveHSV(float *color1, float *color2);
 
 
 #pragma mark Private Methods
-- (void)setBlendingMode:(CTGradientBlendingMode)mode;
+- (void)setBlendingMode_s:(CTGradientBlendingMode)mode;
   {
   blendingMode = mode;
   

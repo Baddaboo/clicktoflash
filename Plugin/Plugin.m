@@ -105,7 +105,7 @@ BOOL usingMATrackingArea = NO;
 
 + (NSView *)plugInViewWithArguments:(NSDictionary *)arguments
 {
-    return [[[self alloc] initWithArguments:arguments] autorelease];
+    return [[self alloc] initWithArguments:arguments];
 }
 
 
@@ -199,7 +199,7 @@ BOOL usingMATrackingArea = NO;
         
         NSString* flashvars = [[self attributes] objectForKey: @"flashvars" ];
         if( flashvars != nil )
-            _flashVars = [ [ self _flashVarDictionary: flashvars ] retain ];
+            _flashVars = [ self _flashVarDictionary: flashvars ];
 		
 		// check whether it's from YouTube and get the video_id
 		
@@ -256,7 +256,7 @@ BOOL usingMATrackingArea = NO;
 						if (videoIdFromURL) [self setVideoId:videoIdFromURL];
 					}
 				}
-				[URLScanner release];
+				//[URLScanner release];
 				
 				if (videoIdFromURL) {
 					// this block of code introduces a situation where we have to download
@@ -466,15 +466,15 @@ BOOL usingMATrackingArea = NO;
 	[self setAttributes:nil];
 	[self setOriginalOpacityAttributes:nil];
 	
-	[_flashVars release];
+	//[_flashVars release];
 	_flashVars = nil;
-	[_badgeText release];
+	//[_badgeText release];
 	_badgeText = nil;
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
 	for (int i = 0; i < 2; ++i) {
-		[connections[i] release];
+		//[connections[i] release];
 		connections[i] = nil;
 	}	
 }
@@ -488,7 +488,7 @@ BOOL usingMATrackingArea = NO;
 	NSLog(@"ClickToFlash:\tdealloc");
 #endif
 	
-    [super dealloc];
+    //[super dealloc];
 }
 
 - (void) _migratePrefsToExternalFile
@@ -746,7 +746,7 @@ BOOL usingMATrackingArea = NO;
     // Set up contextual menu
     
     if( ![ self menu ] ) {
-        if (![NSBundle loadNibNamed:@"ContextualMenu" owner:self]) {
+        if (![[NSBundle mainBundle] loadNibNamed:@"ContextualMenu" owner:self topLevelObjects:nil]) {
             NSLog(@"Could not load contextual menu plugin");
         }
         else {
@@ -863,7 +863,7 @@ BOOL usingMATrackingArea = NO;
 	NSShadow *superAwesomeShadow = [[NSShadow alloc] init];
 	[superAwesomeShadow setShadowOffset:NSMakeSize(2.0, -2.0)];
 	[superAwesomeShadow setShadowColor:[NSColor whiteColor]];
-	[superAwesomeShadow autorelease];
+	//[superAwesomeShadow autorelease];
 	NSDictionary* attrs = [ NSDictionary dictionaryWithObjectsAndKeys: 
 						   [ NSFont boldSystemFontOfSize: 20 ], NSFontAttributeName,
 						   [ NSNumber numberWithInt: -1 ], NSKernAttributeName,
@@ -982,7 +982,7 @@ BOOL usingMATrackingArea = NO;
         if (gearImage == nil)
         {
             NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:@"NSActionTemplate" ofType:@"png"];
-            gearImage = [[[NSImage alloc] initWithContentsOfFile:path] autorelease];
+            gearImage = [[NSImage alloc] initWithContentsOfFile:path];
         }
 
         if( gearImage ) {
@@ -1009,7 +1009,7 @@ BOOL usingMATrackingArea = NO;
                                   radius:[gearImage size].height/2*1.5
                                  options:0];
                 
-                [gradient release];
+                //[gradient release];
             }
             
             // draw the gear image
@@ -1043,7 +1043,7 @@ BOOL usingMATrackingArea = NO;
 
         [gradient drawInBezierPath:[NSBezierPath bezierPathWithRect:fillRect] angle:90.0 + ((mouseIsDown && mouseInside) ? 0.0 : 180.0)];
 
-        [gradient release];
+        //[gradient release];
     }
     else
     {
@@ -1097,19 +1097,21 @@ BOOL usingMATrackingArea = NO;
     trackingArea = [NSClassFromString(@"NSTrackingArea") alloc];
     if (trackingArea != nil)
     {
-        [(MATrackingArea *)trackingArea initWithRect:[self bounds]
+        id t = [(MATrackingArea *)trackingArea initWithRect:[self bounds]
                                              options:MATrackingMouseEnteredAndExited | MATrackingActiveInKeyWindow | MATrackingEnabledDuringMouseDrag | MATrackingInVisibleRect
                                                owner:self
                                             userInfo:nil];
+        NSLog(@"%@",t);
         [self addTrackingArea:trackingArea];
     }
     else
     {
         trackingArea = [NSClassFromString(@"MATrackingArea") alloc];
-        [(MATrackingArea *)trackingArea initWithRect:[self bounds]
+        id t = [(MATrackingArea *)trackingArea initWithRect:[self bounds]
                                              options:MATrackingMouseEnteredAndExited | MATrackingActiveInKeyWindow | MATrackingEnabledDuringMouseDrag | MATrackingInVisibleRect
                                                owner:self
                                             userInfo:nil];
+        NSLog(@"%@",t);
         [MATrackingArea addTrackingArea:trackingArea toView:self];
         usingMATrackingArea = YES;
     }
@@ -1127,7 +1129,7 @@ BOOL usingMATrackingArea = NO;
         {
             [self removeTrackingArea:trackingArea];
         }
-        [trackingArea release];
+        //[trackingArea release];
         trackingArea = nil;
     }
 }
@@ -1264,13 +1266,13 @@ BOOL usingMATrackingArea = NO;
 		}
 	}
 	
-	[HTMLScanner release];
+	//[HTMLScanner release];
 	return flashVarsDictionary;
 }
 
 - (NSString*) flashvarWithName: (NSString*) argName
 {
-    return [[[ _flashVars objectForKey: argName ] retain] autorelease];
+    return [ _flashVars objectForKey: argName ];
 }
 
 /*- (NSString*) _videoId
@@ -1319,7 +1321,7 @@ BOOL usingMATrackingArea = NO;
 	for (int i = 0; i < 2; ++i) {
 		if (connection == connections[i]) {
 			[connection cancel];
-			[connection release];
+			//[connection release];
 			connections[i] = nil;
 		} else if (connections[i])
 			didReceiveAllResponses = NO;
@@ -1364,7 +1366,7 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 	NSMutableURLRequest *newRequest = [request mutableCopy];
 	[newRequest setHTTPMethod:@"HEAD"];
 	
-	return [newRequest autorelease];
+	return newRequest;
 }
 
 - (BOOL) _useHDH264Version
@@ -1517,7 +1519,7 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 		[ self _convertElementForMP4:newElement ];
 	}
     // Just to be safe, since we are about to replace our containing element
-    [[self retain] autorelease];
+    //[[self retain] autorelease];
     
     // Replace self with element.
     [[[self container] parentNode] replaceChild:newElement oldChild:[self container]];
@@ -1544,8 +1546,8 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 		[pathScanner scanUpToString:@".app" intoString:&pathString];
 		NSBundle *testBundle = [[NSBundle alloc] initWithPath:[pathString stringByAppendingPathExtension:@"app"]];
 		NSString *testBundleIdentifier = [testBundle bundleIdentifier];
-		[testBundle release];
-		[pathScanner release];
+		//[testBundle release];
+		//[pathScanner release];
 		
 		
 		// Safari uses the framework inside /System/Library/Frameworks/ , and
@@ -1613,14 +1615,14 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 	}
 	NSAppleScript *openInQTPlayerScript = [[NSAppleScript alloc] initWithSource:scriptSource];
 	[openInQTPlayerScript executeAndReturnError:nil];
-	[openInQTPlayerScript release];
+	//[openInQTPlayerScript release];
 }
 
 - (void)_didRetrieveEmbeddedPlayerFlashVars:(NSDictionary *)flashVars
 {
 	if (flashVars)
 	{
-		_flashVars = [flashVars retain];
+		_flashVars = flashVars;
 		NSString *videoId = [self flashvarWithName:@"video_id"];
 		[self setVideoId:videoId];
 	}
@@ -1630,7 +1632,7 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 
 - (void)_retrieveEmbeddedPlayerFlashVarsAndCheckForVariantsWithVideoId:(NSString *)videoId
 {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	//NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
 	NSString *URLString = [NSString stringWithFormat:@"http://youtube.com/watch?v=%@",videoId];
 	NSURL *YouTubePageURL = [NSURL URLWithString:URLString];
@@ -1647,7 +1649,7 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 						   withObject:flashVars
 						waitUntilDone:NO];
 	
-	[pool drain];
+	//[pool drain];
 }
 
 - (void)_getEmbeddedPlayerFlashVarsAndCheckForVariantsWithVideoId:(NSString *)videoId
@@ -1709,10 +1711,10 @@ didReceiveResponse:(NSHTTPURLResponse *)response
     id parent = [[self container] parentNode];
     id successor = [[self container] nextSibling];
 	
-	DOMElement *theContainer = [[self container] retain];
+	DOMElement *theContainer = [self container];
     [parent removeChild:theContainer];
     [parent insertBefore:theContainer refChild:successor];
-	[theContainer release];
+	//[theContainer release];
     [self setContainer:nil];
 }
 
@@ -1771,8 +1773,8 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 }
 - (void)setContainer:(DOMElement *)newValue
 {
-    [newValue retain];
-    [_container release];
+    //[newValue retain];
+    //[_container release];
     _container = newValue;
 }
 
@@ -1782,8 +1784,8 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 }
 - (void)setHost:(NSString *)newValue
 {
-    [newValue retain];
-    [_host release];
+    //[newValue retain];
+    //[_host release];
     _host = newValue;
 }
 
@@ -1793,8 +1795,8 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 }
 - (void)setBaseURL:(NSString *)newValue
 {
-    [newValue retain];
-    [_baseURL release];
+    //[newValue retain];
+    //[_baseURL release];
     _baseURL = newValue;
 }
 
@@ -1804,8 +1806,8 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 }
 - (void)setAttributes:(NSDictionary *)newValue
 {
-    [newValue retain];
-    [_attributes release];
+    //[newValue retain];
+    //[_attributes release];
     _attributes = newValue;
 }
 
@@ -1815,8 +1817,8 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 }
 - (void)setOriginalOpacityAttributes:(NSDictionary *)newValue
 {
-    [newValue retain];
-    [_originalOpacityAttributes release];
+    //[newValue retain];
+    //[_originalOpacityAttributes release];
     _originalOpacityAttributes = newValue;
 }
 
@@ -1826,19 +1828,19 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 }
 - (void)setSrc:(NSString *)newValue
 {
-    [newValue retain];
-    [_src release];
+    //[newValue retain];
+    //[_src release];
     _src = newValue;
 }
 
 - (NSString *)videoId
 {
-    return [[_videoId retain] autorelease];
+    return _videoId;
 }
 - (void)setVideoId:(NSString *)newValue
 {
-    [newValue retain];
-    [_videoId release];
+    //[newValue retain];
+    //[_videoId release];
     _videoId = newValue;
 }
 
@@ -1866,8 +1868,8 @@ didReceiveResponse:(NSHTTPURLResponse *)response
 
 - (void)setLaunchedAppBundleIdentifier:(NSString *)newValue
 {
-    [newValue retain];
-    [_launchedAppBundleIdentifier release];
+    //[newValue retain];
+    //[_launchedAppBundleIdentifier release];
     _launchedAppBundleIdentifier = newValue;
 }
 @end

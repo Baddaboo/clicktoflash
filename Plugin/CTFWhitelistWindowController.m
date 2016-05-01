@@ -10,7 +10,7 @@ NSString *kCTFCheckForUpdates = @"CTFCheckForUpdates";
     NSBundle *myBundle = [NSBundle bundleForClass:[self class]];
     NSString *nibPath = [myBundle pathForResource:@"WhitelistPanel" ofType:@"nib"];
     if (nibPath == nil) {
-        [self dealloc];
+        //[self dealloc];
         return nil;
     }
     
@@ -76,11 +76,15 @@ NSString *kCTFCheckForUpdates = @"CTFCheckForUpdates";
 		if (userPluginExists && isDirectory) {
 			// we'll move the plugin to the trash, instead of just obstinately
 			// deleting it
-			succeeded = [[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation
-																	 source:[@"~/Library/Internet Plug-ins/" stringByExpandingTildeInPath]
-																destination:nil
-																	  files:[NSArray arrayWithObject:@"ClickToFlash.webplugin"]
-																		tag:nil];
+            //            if ([[NSWorkspace sharedWorkspace] respondsToSelector:@selector(performFileOperation:source:destination:files:tag:)]){
+            //			 succeeded = [[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation
+            //																	 source:[@"~/Library/Internet Plug-ins/" stringByExpandingTildeInPath]
+            //																destination:nil
+            //																	  files:[NSArray arrayWithObject:@"ClickToFlash.webplugin"]
+            //																		tag:nil];
+            //            }
+            succeeded = [[NSFileManager defaultManager] trashItemAtURL:[NSURL URLWithString:[@"~/Library/Internet Plug-ins/" stringByExpandingTildeInPath]]
+                                          resultingItemURL:nil error:nil];
 		}
 		
 		if (succeeded) {

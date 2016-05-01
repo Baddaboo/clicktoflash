@@ -131,14 +131,14 @@ static CTFMenubarMenuController* sSingleton = nil;
 - (id) init
 {
 	if( sSingleton ) {
-		[ self release ];
+		//[ self release ];
 		return sSingleton;
 	}
     
 	self = [ super init ];
 	
 	if( self ) {
-		if( ! [ NSBundle loadNibNamed: @"MenubarMenu" owner: self ] )
+        if( ! [ [NSBundle mainBundle] loadNibNamed: @"MenubarMenu" owner: self topLevelObjects:nil] )
 			NSLog( @"ClickToFlash: Could not load menubar menu nib" );
 		
 		_views = NSCreateHashTable( NSNonRetainedObjectHashCallBacks, 0 );
@@ -150,10 +150,10 @@ static CTFMenubarMenuController* sSingleton = nil;
 
 - (void) dealloc
 {
-	[ _whitelistWindowController release ];
+	//[ _whitelistWindowController release ];
     NSFreeHashTable( _views );
 	
-	[ super dealloc ];
+	//[ super dealloc ];
 }
 
 
@@ -182,9 +182,9 @@ static CTFMenubarMenuController* sSingleton = nil;
     
     // We need a submenu item to wrap this loaded menu:
     
-	NSMenuItem* ctfMenuItem = [ [ [ NSMenuItem alloc ] initWithTitle: [ menu title ]
+	NSMenuItem* ctfMenuItem = [ [ NSMenuItem alloc ] initWithTitle: [ menu title ]
 															  action: nil
-													   keyEquivalent: @"" ] autorelease ];
+													   keyEquivalent: @"" ];
 	[ ctfMenuItem setSubmenu: menu ];
     
     // Insert the submenu there:
@@ -208,13 +208,13 @@ static CTFMenubarMenuController* sSingleton = nil;
 
 - (void) registerView: (NSView*) view
 {
-	NSHashInsertIfAbsent( _views, view );
+	NSHashInsertIfAbsent( _views, (__bridge const void * _Nullable)(view) );
 }
 
 
 - (void) unregisterView: (NSView*) view
 {
-	NSHashRemove( _views, view );
+	NSHashRemove( _views, (__bridge const void * _Nullable)(view) );
 }
 
 
@@ -232,7 +232,7 @@ static CTFMenubarMenuController* sSingleton = nil;
 	
 	NSHashEnumerator enumerator = NSEnumerateHashTable( _views );
 	CTFClickToFlashPlugin* item;
-	while( ( item = NSNextHashEnumeratorItem( &enumerator ) ) ) {
+	while( ( item = (__bridge CTFClickToFlashPlugin *)(NSNextHashEnumeratorItem( &enumerator )) ) ) {
 		if( [ item window ] == keyWindow ) {
 			if( !mustBeInvisible || [ item isConsideredInvisible ] ) {
 				rslt = YES;

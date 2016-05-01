@@ -23,10 +23,7 @@
  THE SOFTWARE.
  
  */
-
 #import "SparkleManager.h"
-#import <Sparkle/Sparkle.h>
-
 #import "CTFUserDefaultsController.h"
 #import "CTFPreferencesDictionary.h"
 
@@ -55,7 +52,7 @@ static NSString *sAutomaticallyCheckForUpdates = @"checkForUpdatesOnFirstLoad";
 
 - (void)dealloc {
     [_updater setDelegate:nil];
-    [super dealloc];
+    //[super dealloc];
 }
 
 - (BOOL)canUpdate {
@@ -93,8 +90,8 @@ static NSString *sAutomaticallyCheckForUpdates = @"checkForUpdatesOnFirstLoad";
 			_canUpdate = YES;
 			_updater = [updaterClass updaterForBundle:clickToFlashBundle];
 			NSAssert(_updater, nil);
-			
-			[_updater setDelegate:self];
+			//Fix this
+			//[_updater setDelegate:self];
 		}
     }
     
@@ -116,7 +113,9 @@ static NSString *sAutomaticallyCheckForUpdates = @"checkForUpdatesOnFirstLoad";
             static BOOL calledUpdaterApplicationDidFinishLaunching = NO;
             if (!calledUpdaterApplicationDidFinishLaunching) {
                 calledUpdaterApplicationDidFinishLaunching = YES;
-                [updater applicationDidFinishLaunching:nil];
+                
+                //warning This needs to be fixed
+                //[updater applicationDidFinishLaunching:nil];
             }
 		} else {
 			[updater setAutomaticallyChecksForUpdates:NO];
@@ -167,8 +166,8 @@ shouldPostponeRelaunchForUpdate:(SUAppcastItem *)update
 }
 - (void)setPathToRelaunch:(NSString *)newValue
 {
-	[newValue retain];
-	[_pathToRelaunch release];
+	//[newValue retain];
+	//[_pathToRelaunch release];
 	_pathToRelaunch = newValue;
 }
 
